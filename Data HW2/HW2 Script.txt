@@ -1,0 +1,74 @@
+Sub Multiyear_Stock_Data()
+
+    
+        Dim ws As Worksheet
+    
+     For Each ws In Worksheets
+    
+        Dim Ticker As String
+        Dim Total_Stock_Volumn As Double
+        Total_Stock_Volumn = 0
+
+        LastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+
+        Dim Summary_Table_Row As Integer
+        Dim year_open As Double
+        Dim year_close As Double
+        
+        Cells(1, 9).Value = "Ticker"
+        Cells(1, 10).Value = "Yearly_Change"
+        Cells(1, 11).Value = "Percentage_Change"
+        Cells(1, 12).Value = "Total_Stock_Volumn"
+        
+        Summary_Table_Row = 2
+
+        For i = 2 To LastRow
+        
+            Ticker = Cells(i, 1).Value
+
+            If year_open = 0 Then
+            
+                year_open = Cells(i, 3).Value
+            
+            End If
+            
+            If Cells(i, 1).Value <> Cells(i + 1, 1).Value Then
+            
+                year_close = Cells(i, 6).Value
+                
+                'Stock's first day of the year's opening number vs stock's last day of the years' closing number
+                
+                Yearly_Change = year_close - year_open
+    
+                If year_open = 0 Then
+                    Percentage_Change = 0
+                Else
+                    Percentage_Change = Yearly_Change / year_open
+                End If
+                
+                Total_Stock_Volumn = Total_Stock_Volumn + Cells(i, 7).Value
+                
+                
+                ws.Range("I" & Summary_Table_Row).Value = Ticker
+                
+                ws.Range("J" & Summary_Table_Row).Value = Yearly_Change
+                
+                ws.Range("K" & Summary_Table_Row).Value = Percentage_Change
+                
+                ws.Range("L" & Summary_Table_Row).Value = Total_Stock_Volumn
+                
+                Summary_Table_Row = Summary_Table_Row + 1
+                
+                Total_Stock_Volumn = 0
+                
+             Else
+                
+                Total_Stock_Volumn = Total_Stock_Volumn + Cells(i, 7).Value
+            
+            End If
+
+        Next i
+
+    Next ws
+
+End Sub
